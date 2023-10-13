@@ -8,8 +8,12 @@ import { Question } from "./components/Question";
 import { Progress } from "./components/Progress";
 import { NextButton } from "./components/NextButton";
 import { FinishScreen } from "./components/FinishScreen";
+import { Footer } from "./components/Footer";
+import { Timer } from "./components/Timer";
 
 import confetti from "https://cdn.skypack.dev/canvas-confetti";
+
+const SECS_PER_QUESTİON = 30;
 
 const initialState = {
   questions: [],
@@ -20,6 +24,7 @@ const initialState = {
   answer: null,
   points: 0,
   highScore: 0,
+  secondsRemaining: null,
 };
 
 function reducer(state, action) {
@@ -29,7 +34,11 @@ function reducer(state, action) {
     case "dataFailed":
       return { ...state, status: "error" };
     case "start":
-      return { ...state, status: "active" };
+      return {
+        ...state,
+        status: "active",
+        secondsRemaining: state.questions.length * SECS_PER_QUESTİON,
+      };
     case "newAnswer":
       const question = state.questions.at(state.index);
       return {
@@ -69,13 +78,21 @@ function reducer(state, action) {
         status: "ready",
         highScore: state.highScore,
       };
+    case "tick":
+      return {
+        ...state,
+        secondsRemaining: state.secondsRemaining - 1,
+        status: state.secondsRemaining === 0 ? "finished" : state.status,
+      };
     default:
       throw new Error("Action not found");
   }
 }
 export default function App() {
-  const [{ status, index, questions, answer, points, highScore }, dispatch] =
-    useReducer(reducer, initialState);
+  const [
+    { status, index, questions, answer, points, highScore, secondsRemaining },
+    dispatch,
+  ] = useReducer(reducer, initialState);
 
   const maxPoints = questions.reduce((prev, curr) => curr.points + prev, 0);
   const numberOfQuestions = questions.length;
@@ -112,12 +129,15 @@ export default function App() {
               dispatch={dispatch}
               answer={answer}
             />
-            <NextButton
-              answer={answer}
-              dispatch={dispatch}
-              numberOfQuestions={numberOfQuestions}
-              index={index}
-            />
+            <Footer>
+              <Timer dispatch={dispatch} secondsRemaining={secondsRemaining} />
+              <NextButton
+                answer={answer}
+                dispatch={dispatch}
+                numberOfQuestions={numberOfQuestions}
+                index={index}
+              />
+            </Footer>
           </>
         )}
         {status === "finished" && (

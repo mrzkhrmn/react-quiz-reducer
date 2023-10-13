@@ -19,6 +19,7 @@ body {
 
 h1 {
   font-size: 56px;
+  margin-bottom: 30px;
 }
 
 h2 {
@@ -38,7 +39,15 @@ header {
   margin-bottom: 10px;
   font-size: 20px;
 }
+progress {
+  width: 100%;
+}
 
+.progress-text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .app {
   display: flex;
   flex-direction: column;
@@ -91,7 +100,6 @@ header {
 }
 
 .btn-next {
-  margin-top: 30px;
   padding: 10px 50px;
   float: right;
 }
@@ -128,4 +136,19 @@ header {
 
 .progress {
   font-size: 18px;
+}
+
+.timer {
+  font-size: 24px;
+  background-color: #ffffff18;
+  color: white;
+  padding: 10px 50px;
+  border-radius: 10px;
+  transition: 0.3s all ease;
+}
+.footer {
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
